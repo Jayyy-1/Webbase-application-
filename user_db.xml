@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+- phpMyAdmin XML Dump
+- version 5.2.1
+- https://www.phpmyadmin.net
+-
+- Host: 127.0.0.1
+- Generation Time: Nov 21, 2024 at 02:06 PM
+- Server version: 10.4.32-MariaDB
+- PHP Version: 8.0.30
+-->
+
+<pma_xml_export version="1.0" xmlns:pma="https://www.phpmyadmin.net/some_doc_url/">
+    <!--
+    - Structure schemas
+    -->
+    <pma:structure_schemas>
+        <pma:database name="user_db" collation="utf8mb4_general_ci" charset="utf8mb4">
+            <pma:table name="bookings">
+                CREATE TABLE `bookings` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `event_date` date NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            </pma:table>
+            <pma:table name="booking_services">
+                CREATE TABLE `booking_services` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `booking_id` int(11) DEFAULT NULL,
+                  `service` varchar(255) DEFAULT NULL,
+                  PRIMARY KEY (`id`),
+                  KEY `booking_id` (`booking_id`),
+                  CONSTRAINT `booking_services_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            </pma:table>
+            <pma:table name="notifications">
+                CREATE TABLE `notifications` (
+                  `notification_id` int(11) NOT NULL AUTO_INCREMENT,
+                  `user_id` int(11) DEFAULT NULL,
+                  `message` text DEFAULT NULL,
+                  `is_read` tinyint(1) DEFAULT 0,
+                  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+                  `notification_type` enum('admin','user') DEFAULT 'user',
+                  PRIMARY KEY (`notification_id`)
+                ) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            </pma:table>
+            <pma:table name="payments">
+                CREATE TABLE `payments` (
+                  `payment_id` int(11) NOT NULL AUTO_INCREMENT,
+                  `user_id` int(11) DEFAULT NULL,
+                  `amount` decimal(10,2) NOT NULL,
+                  `payment_status` enum('completed') DEFAULT NULL,
+                  `payment_method` varchar(50) DEFAULT NULL,
+                  `payment_date` datetime DEFAULT current_timestamp(),
+                  PRIMARY KEY (`payment_id`),
+                  KEY `user_id` (`user_id`),
+                  CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+                ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            </pma:table>
+            <pma:table name="photobooking">
+                CREATE TABLE `photobooking` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `user_id` int(11) NOT NULL,
+                  `event_date` date NOT NULL,
+                  `customer_name` varchar(100) NOT NULL,
+                  `amount` decimal(10,2) NOT NULL,
+                  `payment` varchar(50) NOT NULL,
+                  `email` varchar(100) NOT NULL,
+                  `contact_number` varchar(15) NOT NULL,
+                  `address` varchar(255) NOT NULL,
+                  `celebrant_name` varchar(100) NOT NULL,
+                  `event_type` varchar(100) NOT NULL,
+                  `venue` varchar(255) NOT NULL,
+                  `theme` varchar(100) DEFAULT NULL,
+                  `services` varchar(255) DEFAULT NULL,
+                  `custom_notes` text DEFAULT NULL,
+                  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+                  `status` enum('pending','approved','rejected') DEFAULT 'pending',
+                  `package` varchar(255) NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            </pma:table>
+            <pma:table name="reviews">
+                CREATE TABLE `reviews` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `user_name` varchar(255) NOT NULL,
+                  `review_text` text NOT NULL,
+                  `rating` int(11) DEFAULT NULL CHECK (`rating` &gt;= 1 and `rating` &lt;= 5),
+                  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            </pma:table>
+            <pma:table name="users">
+                CREATE TABLE `users` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `username` varchar(50) NOT NULL,
+                  `email` varchar(100) NOT NULL,
+                  `contact` varchar(20) DEFAULT NULL,
+                  `password` varchar(255) NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            </pma:table>
+            <pma:table name="user_form">
+                CREATE TABLE `user_form` (
+                  `id` int(255) NOT NULL AUTO_INCREMENT,
+                  `name` varchar(255) NOT NULL,
+                  `email` varchar(255) NOT NULL,
+                  `password` varchar(255) NOT NULL,
+                  `user_type` varchar(255) NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            </pma:table>
+        </pma:database>
+    </pma:structure_schemas>
+
+    <!--
+    - Database: 'user_db'
+    -->
+    <database name="user_db">
+        <!-- Table bookings -->
+        <!-- Table booking_services -->
+        <!-- Table notifications -->
+        <table name="notifications">
+            <column name="notification_id">1</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 01:03:34</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">2</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment is pending approval.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:03:34</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">3</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 01:04:18</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">4</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment is pending approval.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:04:18</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">5</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment has been completed successfully.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 01:11:07</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">6</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment has been completed successfully.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 01:11:39</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">7</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 01:14:20</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">8</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment is pending approval.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:14:21</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">9</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 01:21:23</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">10</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment is pending approval.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:21:23</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">11</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 01:28:22</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">12</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment is pending approval.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:28:22</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">13</column>
+            <column name="user_id">1</column>
+            <column name="message">Payment approved successfully.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:45:54</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">14</column>
+            <column name="user_id">1</column>
+            <column name="message">Payment approved successfully.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:46:07</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">15</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 01:48:04</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">16</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment is pending approval.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:48:04</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">17</column>
+            <column name="user_id">6</column>
+            <column name="message">Payment approved successfully.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:48:25</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">18</column>
+            <column name="user_id">6</column>
+            <column name="message">Payment approved successfully.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:48:29</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">19</column>
+            <column name="user_id">1</column>
+            <column name="message">Payment approved successfully.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:48:30</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">20</column>
+            <column name="user_id">6</column>
+            <column name="message">Payment approved successfully.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:48:38</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">21</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 01:50:44</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">22</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment is pending approval.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:50:44</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">23</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 01:52:56</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">24</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment is pending approval.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 01:52:56</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">25</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 02:00:29</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">26</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment is pending approval.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 02:00:29</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">27</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 11:32:00</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">28</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment is pending approval.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 11:32:00</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">29</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 11:39:43</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">30</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment is pending approval.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 11:39:43</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">31</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment of 1234 via gcash is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 11:43:25</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">32</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment of 1234 via gcash is pending approval from user jay@gmail.com.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 11:43:25</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">33</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment of 1234 via gcash is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 11:43:54</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">34</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment of 1234 via gcash is pending approval from user jay@gmail.com.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 11:43:54</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">35</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment of 2899 via gcash is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-06 11:48:55</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">36</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment of 2899 via gcash is pending approval from user jay@gmail.com.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-06 11:48:55</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">37</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment of 2899 via gcash is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-07 23:29:27</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">38</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment of 2899 via gcash is pending approval from user jay@gmail.com.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-07 23:29:27</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">39</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment of 122 via paymaya is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-07 23:35:07</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">40</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment of 122 via paymaya is pending approval from user jay@gmail.com.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-07 23:35:07</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">41</column>
+            <column name="user_id">3</column>
+            <column name="message">Your payment of 1010 via paymaya is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-15 17:29:35</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">42</column>
+            <column name="user_id">3</column>
+            <column name="message">A new payment of 1010 via paymaya is pending approval from user kurt@gmail.com.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-15 17:29:35</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">43</column>
+            <column name="user_id">1</column>
+            <column name="message">Your payment of 2899 via gcash is pending.</column>
+            <column name="is_read">0</column>
+            <column name="created_at">2024-11-16 12:33:56</column>
+            <column name="notification_type">user</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">44</column>
+            <column name="user_id">1</column>
+            <column name="message">A new payment of 2899 via gcash is pending approval from user jay@gmail.com.</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-16 12:33:56</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">45</column>
+            <column name="user_id">NULL</column>
+            <column name="message">New booking received from harold for 18th birthday on 2024-11-30</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-19 18:18:13</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">46</column>
+            <column name="user_id">NULL</column>
+            <column name="message">New booking received from harold for 18th birthday on 2024-11-30</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-19 18:18:19</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <table name="notifications">
+            <column name="notification_id">47</column>
+            <column name="user_id">NULL</column>
+            <column name="message">New booking received from harold for 18th birthday on 2024-11-30</column>
+            <column name="is_read">1</column>
+            <column name="created_at">2024-11-19 18:19:54</column>
+            <column name="notification_type">admin</column>
+        </table>
+        <!-- Table payments -->
+        <table name="payments">
+            <column name="payment_id">18</column>
+            <column name="user_id">1</column>
+            <column name="amount">2899.00</column>
+            <column name="payment_status"></column>
+            <column name="payment_method">gcash</column>
+            <column name="payment_date">2024-11-16 12:33:56</column>
+        </table>
+        <!-- Table photobooking -->
+        <table name="photobooking">
+            <column name="id">53</column>
+            <column name="user_id">1</column>
+            <column name="event_date">2024-11-29</column>
+            <column name="customer_name">Jay</column>
+            <column name="amount">0.00</column>
+            <column name="payment">Pending</column>
+            <column name="email">jay@gmail.com</column>
+            <column name="contact_number">09123456723</column>
+            <column name="address">san fernando</column>
+            <column name="celebrant_name">Jay.com</column>
+            <column name="event_type">18th birthday</column>
+            <column name="venue">san fernando</column>
+            <column name="theme">BEN 10</column>
+            <column name="services">[&quot;Drone Coverage&quot;]</column>
+            <column name="custom_notes">hii harvy</column>
+            <column name="created_at">2024-11-19 19:05:06</column>
+            <column name="status">pending</column>
+            <column name="package">Custom Package</column>
+        </table>
+        <table name="photobooking">
+            <column name="id">54</column>
+            <column name="user_id">2</column>
+            <column name="event_date">2024-11-30</column>
+            <column name="customer_name">aldrey</column>
+            <column name="amount">0.00</column>
+            <column name="payment">Pending</column>
+            <column name="email">aldrey@gmail.com</column>
+            <column name="contact_number">09123456778</column>
+            <column name="address">san fernando</column>
+            <column name="celebrant_name">ALROSE</column>
+            <column name="event_type">WEDDING</column>
+            <column name="venue">lipa city</column>
+            <column name="theme">dora</column>
+            <column name="services">[&quot;Photo Album&quot;]</column>
+            <column name="custom_notes">ALROSE 4 EVER</column>
+            <column name="created_at">2024-11-19 19:06:36</column>
+            <column name="status">pending</column>
+            <column name="package">Custom Package</column>
+        </table>
+        <table name="photobooking">
+            <column name="id">55</column>
+            <column name="user_id">3</column>
+            <column name="event_date">2024-12-01</column>
+            <column name="customer_name">kurt</column>
+            <column name="amount">2899.00</column>
+            <column name="payment">Pending</column>
+            <column name="email">kurt@gmail.com</column>
+            <column name="contact_number">09123456778</column>
+            <column name="address">san fernando</column>
+            <column name="celebrant_name">bayutog</column>
+            <column name="event_type">birthday ni bulado</column>
+            <column name="venue">p7 malvar</column>
+            <column name="theme">rosas na blue</column>
+            <column name="services">NULL</column>
+            <column name="custom_notes">NULL</column>
+            <column name="created_at">2024-11-19 19:09:06</column>
+            <column name="status">pending</column>
+            <column name="package">Bronze I Package</column>
+        </table>
+        <table name="photobooking">
+            <column name="id">56</column>
+            <column name="user_id">4</column>
+            <column name="event_date">2024-12-02</column>
+            <column name="customer_name">marko</column>
+            <column name="amount">5449.00</column>
+            <column name="payment">Pending</column>
+            <column name="email">marko@gmail.com</column>
+            <column name="contact_number">09876543219</column>
+            <column name="address">sto tomas</column>
+            <column name="celebrant_name">Pogi ni Marko</column>
+            <column name="event_type">18th birthday</column>
+            <column name="venue">Sto tomas</column>
+            <column name="theme">Lilipad na sa ere</column>
+            <column name="services">NULL</column>
+            <column name="custom_notes">NULL</column>
+            <column name="created_at">2024-11-19 19:11:16</column>
+            <column name="status">pending</column>
+            <column name="package">Gold II Package</column>
+        </table>
+        <!-- Table reviews -->
+        <table name="reviews">
+            <column name="id">8</column>
+            <column name="user_name">Jay</column>
+            <column name="review_text">LETSGO</column>
+            <column name="rating">5</column>
+            <column name="created_at">2024-11-16 12:12:30</column>
+        </table>
+        <!-- Table users -->
+        <table name="users">
+            <column name="id">1</column>
+            <column name="username">username</column>
+            <column name="email">email@example.com</column>
+            <column name="contact">NULL</column>
+            <column name="password"></column>
+        </table>
+        <!-- Table user_form -->
+        <table name="user_form">
+            <column name="id">1</column>
+            <column name="name">Jay</column>
+            <column name="email">jay@gmail.com</column>
+            <column name="password">81dc9bdb52d04dc20036dbd8313ed055</column>
+            <column name="user_type">user</column>
+        </table>
+        <table name="user_form">
+            <column name="id">2</column>
+            <column name="name">aldrey</column>
+            <column name="email">aldrey@gmail.com</column>
+            <column name="password">81dc9bdb52d04dc20036dbd8313ed055</column>
+            <column name="user_type">user</column>
+        </table>
+        <table name="user_form">
+            <column name="id">3</column>
+            <column name="name">kurt</column>
+            <column name="email">kurt@gmail.com</column>
+            <column name="password">81dc9bdb52d04dc20036dbd8313ed055</column>
+            <column name="user_type">user</column>
+        </table>
+        <table name="user_form">
+            <column name="id">4</column>
+            <column name="name">marko</column>
+            <column name="email">marko@gmail.com</column>
+            <column name="password">81dc9bdb52d04dc20036dbd8313ed055</column>
+            <column name="user_type">user</column>
+        </table>
+        <table name="user_form">
+            <column name="id">5</column>
+            <column name="name">harold</column>
+            <column name="email">harold@gmail.com</column>
+            <column name="password">81dc9bdb52d04dc20036dbd8313ed055</column>
+            <column name="user_type">user</column>
+        </table>
+        <table name="user_form">
+            <column name="id">10</column>
+            <column name="name">admin</column>
+            <column name="email">admin@gmail.com</column>
+            <column name="password">21232f297a57a5a743894a0e4a801fc3</column>
+            <column name="user_type">admin</column>
+        </table>
+    </database>
+</pma_xml_export>
